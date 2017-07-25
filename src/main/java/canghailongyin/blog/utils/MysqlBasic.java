@@ -9,33 +9,36 @@ import java.util.*;
 /**
  * Created by mingl on 2017-4-26.
  */
-public class MysqlBasic{
+public class MysqlBasic {
 
     public static String database = "";
     private static final String enCoding = "?useUnicode=true&characterEncoding=utf8&autoReconnect=true&maxReconnects=3&useSSL=false";
     public Connection conn = null;
     public PreparedStatement pst = null;
 
-    public MysqlBasic(String database){
+    public MysqlBasic(String database) {
         this.database = database;
     }
-    public MysqlBasic(){
+
+    public MysqlBasic() {
 
     }
+
     public void setDatabase(String database) {
         this.database = database;
     }
+
     public Connection open() {
-        try{
+        try {
             String dbHost = PropertiesUtil.getValue("mysqlHost", "localhost");
             String dbPort = PropertiesUtil.getValue("mysqlPort", "3306");
             String dbUser = PropertiesUtil.getValue("mysqlUser", "root");
             String dbPassword = PropertiesUtil.getValue("mysqlPassword", "123456");
             String dbDriver = PropertiesUtil.getValue("mysqlDriver", "com.mysql.jdbc.Driver");
             String url = "";
-            if(database.equals("")){
+            if (database.equals("")) {
                 url = "jdbc:mysql://" + dbHost + ":" + dbPort + enCoding;
-            }else {
+            } else {
                 url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + database + enCoding;
             }
             Class.forName(dbDriver);
@@ -46,7 +49,6 @@ public class MysqlBasic{
         }
         return conn;
     }
-
 
 
     public ResultSet get(String sql) {
@@ -105,12 +107,12 @@ public class MysqlBasic{
     }
 
     public void close() {
-        try{
-            if(conn != null)
+        try {
+            if (conn != null)
                 this.conn.close();
-            if(pst != null)
+            if (pst != null)
                 this.pst.close();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

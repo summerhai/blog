@@ -29,7 +29,8 @@ public class PropertiesUtil {
 
     /**
      * get value by key with a default value.
-     * @param key key String to index property
+     *
+     * @param key          key String to index property
      * @param defaultValue default value to return if key do not match
      * @return property value
      */

@@ -5,13 +5,13 @@ import java.util.Properties;
 /**
  * A subclass of Properties that allows recursive
  * references for property values. For example,
- *
+ * <p>
  * <pre><code>
  * A=12345678
  * B={A}90
  * C={B} plus more
  * </code></pre>
- *
+ * <p>
  * will result in <code>getProperty("C")</code>
  * returning the value "1234567890 plus more".
  *
@@ -44,6 +44,7 @@ public class XProperties extends Properties {
     /**
      * Creates an empty property list with the
      * specified defaults.
+     *
      * @param defaults java.util.Properties
      */
     public XProperties(Properties defaults) {
@@ -59,9 +60,9 @@ public class XProperties extends Properties {
      * are then checked. The method returns
      * <code>null</code> if the property is not found.
      *
-     * @param   key   the property key.
-     * @return  the value in this property list with
-     *    the specified key value.
+     * @param key the property key.
+     * @return the value in this property list with
+     * the specified key value.
      */
     public String getProperty(String key) {
 
@@ -78,7 +79,7 @@ public class XProperties extends Properties {
      * property list, and its defaults, recursively,
      * are then checked. The method returns
      * <code>null</code> if the property is not found.
-     *
+     * <p>
      * <p>The level parameter specifies the current
      * level of recursive constant substitution. If
      * the requested property value includes a
@@ -89,9 +90,9 @@ public class XProperties extends Properties {
      * substitutions are performed within the
      * current requested value.
      *
-     * @param   key   the property key.
-     * @param level  the level of recursion so far
-     * @return  the value in this property list with
+     * @param key   the property key.
+     * @param level the level of recursion so far
+     * @return the value in this property list with
      * the specified key value.
      */
     private String getProperty(String key, int level) {
@@ -107,7 +108,7 @@ public class XProperties extends Properties {
 
 
             while (startName != -1) {
-                if (level+1 > MAX_SUBST_DEPTH) {
+                if (level + 1 > MAX_SUBST_DEPTH) {
                     // Exceeded MAX_SUBST_DEPTH
                     // Return the value as is
                     return value;
@@ -122,8 +123,8 @@ public class XProperties extends Properties {
                 }
 
 
-                String constName = value.substring(startName+1, endName);
-                String constValue = getProperty(constName, level+1);
+                String constName = value.substring(startName + 1, endName);
+                String constValue = getProperty(constName, level + 1);
 
 
                 if (constValue == null) {
@@ -135,7 +136,7 @@ public class XProperties extends Properties {
 
                 // Insert the constant value into the
                 // original property value
-                String newValue = (startName>0)
+                String newValue = (startName > 0)
                         ? value.substring(0, startName) : "";
                 newValue += constValue;
 
@@ -145,7 +146,7 @@ public class XProperties extends Properties {
 
 
                 // Append the remainder of the value
-                newValue += value.substring(endName+1);
+                newValue += value.substring(endName + 1);
 
 
                 value = newValue;

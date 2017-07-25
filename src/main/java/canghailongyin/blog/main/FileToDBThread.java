@@ -24,7 +24,7 @@ import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabe
  * 多线程（文件分块），批量插入Mysql，性能如何优化
  * txt,csv怎么处理，xls怎么处理，xlsx怎么处理
  */
-public class FileToDBThread implements Runnable{
+public class FileToDBThread implements Runnable {
     /**
      * 线程名称
      */
@@ -66,7 +66,7 @@ public class FileToDBThread implements Runnable{
      */
     private Connection con;
 
-    public FileToDBThread(){
+    public FileToDBThread() {
 
     }
 
@@ -83,19 +83,20 @@ public class FileToDBThread implements Runnable{
         this.encode = encode;
         this.con = con;
     }
+
     @Override
     public void run() {
         if (filePath.endsWith(".csv")) {
-            csvFileToDB(threadName, filePath, startIndex, endIndex, tableName,tableHeader,batchLength,split,encode,con);
+            csvFileToDB(threadName, filePath, startIndex, endIndex, tableName, tableHeader, batchLength, split, encode, con);
         } else if (filePath.endsWith(".xlsx")) {//xls最长65536行，所以不考虑
-            xlsxFileToDB(threadName, filePath, startIndex, endIndex, tableName,tableHeader,batchLength,split,encode,con);
-        }else {
-            normalFileToDB(threadName, filePath, startIndex, endIndex, tableName,tableHeader,batchLength,split,encode,con);
+            xlsxFileToDB(threadName, filePath, startIndex, endIndex, tableName, tableHeader, batchLength, split, encode, con);
+        } else {
+            normalFileToDB(threadName, filePath, startIndex, endIndex, tableName, tableHeader, batchLength, split, encode, con);
         }
     }
 
     public static void xlsxFileToDB(String threadName, String filePath, long startIndex, long endIndex, String tableName,
-                                   String tableHeader, int batchLength, String split, String encode,Connection con) {
+                                    String tableHeader, int batchLength, String split, String encode, Connection con) {
         System.out.println("线程" + threadName + "启动.......................");
         System.out.println("split=" + split + ".encode=" + encode
                 + ",fileName=" + filePath + ", start=" + startIndex + ", end=" + endIndex);
@@ -108,36 +109,36 @@ public class FileToDBThread implements Runnable{
                     .rowCacheSize(1000)    // number of rows to keep in memory (defaults to 10)
                     .bufferSize(4096)     // buffer size to use when reading InputStream to file (defaults to 1024)
                     .open(input);
-            String preSql = "insert into `"+tableName+"` "+tableHeader+" values ";
+            String preSql = "insert into `" + tableName + "` " + tableHeader + " values ";
             PreparedStatement statement = con.prepareStatement(preSql);
             StringBuilder value = new StringBuilder();
             Sheet sheet = workbook.getSheetAt(0);//默认取第一个sheet
             System.out.println(sheet.getSheetName());
             int count = 0;
             boolean isFirstLine = true;
-            for(Row r : sheet){
+            for (Row r : sheet) {
                 count++;
-                if(isFirstLine){
+                if (isFirstLine) {
                     isFirstLine = false;
                     continue;
                 }
-                int columnNum = r.getLastCellNum()-1;
+                int columnNum = r.getLastCellNum() - 1;
                 value.append("(");
-                for(int j=0;j<columnNum;j++){
+                for (int j = 0; j < columnNum; j++) {
                     Cell c = r.getCell(j);
-                    if(j==columnNum-1){
-                        value.append("'"+c.getStringCellValue()+"'),");
-                    }else{
-                        value.append("'"+c.getStringCellValue()+"',");
+                    if (j == columnNum - 1) {
+                        value.append("'" + c.getStringCellValue() + "'),");
+                    } else {
+                        value.append("'" + c.getStringCellValue() + "',");
                     }
                 }
-                if(count % batchLength == 0){
-                    statement.addBatch(preSql+value.toString().substring(0,value.length()-1));
+                if (count % batchLength == 0) {
+                    statement.addBatch(preSql + value.toString().substring(0, value.length() - 1));
                     statement.executeBatch();
                     value = new StringBuilder();
                 }
             }
-            statement.addBatch(preSql+value.toString().substring(0,value.length()-1));
+            statement.addBatch(preSql + value.toString().substring(0, value.length() - 1));
             statement.executeBatch();
             value = null;
         } catch (FileNotFoundException e) {
@@ -155,15 +156,15 @@ public class FileToDBThread implements Runnable{
     }
 
     public void csvFileToDB(String threadName, String filePath, long startIndex, long endIndex, String tableName,
-                                      String tableHeader, int batchLength, String split, String encode,Connection con) {
+                            String tableHeader, int batchLength, String split, String encode, Connection con) {
         System.out.println("线程" + threadName + "启动.......................");
         System.out.println("split=" + split + ".encode=" + encode
                 + ",fileName=" + filePath + ", start=" + startIndex + ", end=" + endIndex);
         long count = 0;//文件索引块位置
         String curSql = "";//当前插入数据库的sql语句
-        if(encode==null)
+        if (encode == null)
             encode = "UTF-8";//默认编码
-        if(split==null)
+        if (split == null)
             split = ",";
         InputStream input = null;
         CSVReader csvReader = null;
@@ -179,13 +180,13 @@ public class FileToDBThread implements Runnable{
                     + " values ";
             PreparedStatement statement = con.prepareStatement(preSql);
 
-            String titleLine = Arrays.asList(lines).toString().replace("[","").replace("]","");
+            String titleLine = Arrays.asList(lines).toString().replace("[", "").replace("]", "");
             String[] titleLineData = processLine(titleLine, split);
             if (titleLineData == null) {
                 return;
             }
             StringBuilder value = new StringBuilder();//拼接的sql语句
-            while ((lines = csvReader.readNext()) != null){
+            while ((lines = csvReader.readNext()) != null) {
                 count++;
                 if (count < startIndex) {
                     continue;
@@ -193,28 +194,28 @@ public class FileToDBThread implements Runnable{
                 if (count >= endIndex)
                     break;
                 //如果是线程所在区域的行，进行封装sql处理
-                if(count>=startIndex&&count<endIndex){
+                if (count >= startIndex && count < endIndex) {
                     value.append("(");
-                    for(int i=0;i<lines.length;i++){
-                        if(i==lines.length-1){
-                            value.append("'"+lines[i]+"'),");
-                        }else{
-                            value.append("'"+lines[i]+"',");
+                    for (int i = 0; i < lines.length; i++) {
+                        if (i == lines.length - 1) {
+                            value.append("'" + lines[i] + "'),");
+                        } else {
+                            value.append("'" + lines[i] + "',");
                         }
                     }
                 }
                 //达到如下情况执行sql操作，1达到batchLength，2到达结尾处
                 if ((count % batchLength == 0 || count == endIndex - 1) && count != startIndex) {
-                    curSql = preSql + value.toString().substring(0,value.length()-1);
+                    curSql = preSql + value.toString().substring(0, value.length() - 1);
                     statement.addBatch(curSql);
                     statement.executeBatch();
                     value = new StringBuilder();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("errorsql:"+curSql);
-        }finally {
+            System.out.println("errorsql:" + curSql);
+        } finally {
             try {
                 input.close();
                 csvReader.close();
@@ -226,13 +227,13 @@ public class FileToDBThread implements Runnable{
     }
 
     public static void normalFileToDB(String threadName, String filePath, long startIndex, long endIndex, String tableName,
-                                      String tableHeader, int batchLength, String split, String encode,Connection con) {
+                                      String tableHeader, int batchLength, String split, String encode, Connection con) {
         System.out.println("线程" + threadName + "启动.......................");
         System.out.println("split=" + split + ".encode=" + encode
                 + ",fileName=" + filePath + ", start=" + startIndex + ", end=" + endIndex);
         long count = 0;//文件索引块位置
         String curSql = "";//当前插入数据库的sql语句
-        if(encode==null)
+        if (encode == null)
             encode = "UTF-8";//默认编码
         try {
             //读取标题行
@@ -240,9 +241,9 @@ public class FileToDBThread implements Runnable{
             String line = raf.readLine();
             count += line.length() + split.length();
             line = new String(line.getBytes("ISO-8859-1"), encode);
-            System.out.println("从原文中取出的标题是:"+line + ", skip byte count: " + count);
+            System.out.println("从原文中取出的标题是:" + line + ", skip byte count: " + count);
             System.out.println("current index: " + count + ", start is: " + startIndex + ", end is: " + endIndex);
-            String preSql = "insert into `"+tableName+"` "+tableHeader+" values ";//入库语句的前缀
+            String preSql = "insert into `" + tableName + "` " + tableHeader + " values ";//入库语句的前缀
             System.out.println(preSql);
             PreparedStatement statement = con.prepareStatement(preSql);
             String[] titleLineData = processLine(line, split);
@@ -258,26 +259,26 @@ public class FileToDBThread implements Runnable{
             int lineLength = 0;//单行按分隔符分割后的长度
             int lineCount = 0;//统计行数，到达batchLength就入库
             StringBuilder value = new StringBuilder();//拼接的sql语句
-            while((line = raf.readLine())!=null){
+            while ((line = raf.readLine()) != null) {
                 lineLength = line.length();
                 line = new String(line.getBytes("ISO-8859-1"), encode);
                 String[] lines = line.split(split);
                 //如果是线程所在区域的行，进行封装sql处理
-                if(count>=startIndex&&count<=endIndex){
+                if (count >= startIndex && count <= endIndex) {
                     value.append("(");
                     lineCount++;
-                    for(int i=0;i<lines.length;i++){
-                        if(i==lines.length-1){
-                            value.append("'"+lines[i]+"'),");
-                        }else{
-                            value.append("'"+lines[i]+"',");
+                    for (int i = 0; i < lines.length; i++) {
+                        if (i == lines.length - 1) {
+                            value.append("'" + lines[i] + "'),");
+                        } else {
+                            value.append("'" + lines[i] + "',");
                         }
                     }
                     count += lineLength + split.length();
                 }
                 //达到如下情况执行sql操作，1达到batchLength，2到达结尾处
-                if (((lineCount % batchLength == 0) && (lineCount / batchLength > 0)) || count  >= endIndex) {
-                    curSql = preSql + value.toString().substring(0,value.length()-1);
+                if (((lineCount % batchLength == 0) && (lineCount / batchLength > 0)) || count >= endIndex) {
+                    curSql = preSql + value.toString().substring(0, value.length() - 1);
                     statement.addBatch(curSql);
                     statement.executeBatch();
                     value = new StringBuilder();
@@ -286,13 +287,15 @@ public class FileToDBThread implements Runnable{
                     break;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("errorsql:"+curSql);
+            System.out.println("errorsql:" + curSql);
         }
     }
+
     /**
      * Computing record columns according to file record line with column splitter
+     *
      * @param line: file record line
      * @param split
      * @return
@@ -402,16 +405,16 @@ public class FileToDBThread implements Runnable{
         final String filePath = "E:\\程序生成\\1W行.xlsx";
         String tableName = "testW";
         String header = "(";
-        for(int i=1;i<=8;i++){
-            header += "column"+i+",";
+        for (int i = 1; i <= 8; i++) {
+            header += "column" + i + ",";
         }
-        header = header.substring(0,header.length()-1)+")";
-        if(filePath.endsWith(".xlsx")){
-            xlsxFileToDB("thread",filePath,0,0,tableName,header,1000,",","utf-8",con);
-        }else if(filePath.endsWith(".csv")){
-            csvFileThread(con,filePath,tableName,header);
-        }else{
-            normalFileThread(con,filePath,tableName,header);
+        header = header.substring(0, header.length() - 1) + ")";
+        if (filePath.endsWith(".xlsx")) {
+            xlsxFileToDB("thread", filePath, 0, 0, tableName, header, 1000, ",", "utf-8", con);
+        } else if (filePath.endsWith(".csv")) {
+            csvFileThread(con, filePath, tableName, header);
+        } else {
+            normalFileThread(con, filePath, tableName, header);
         }
     }
 
@@ -419,23 +422,23 @@ public class FileToDBThread implements Runnable{
         final long startTime = System.currentTimeMillis();
         int recordNum = getRecordNumFromFile(filePath);
         if (recordNum < 1000) { // 1 * 1024 = 1KB, 1024 * 1024 = 1MB
-            FileToDBThread fileToDBThread = new FileToDBThread("thread1",filePath,0, recordNum,tableName,header,1000,",","UTF-8",con);
+            FileToDBThread fileToDBThread = new FileToDBThread("thread1", filePath, 0, recordNum, tableName, header, 1000, ",", "UTF-8", con);
             Thread thread = new Thread(fileToDBThread);
             thread.start();
-        }else{
+        } else {
             recordNum = recordNum - 1;
-            int threadProcessNum = recordNum/10;
+            int threadProcessNum = recordNum / 10;
             final Thread[] threads = new Thread[11];
-            for(int i=0;i<11;i++){
-                int start = i*threadProcessNum;
-                int end = (i+1)*threadProcessNum;
-                if(start>=recordNum){
+            for (int i = 0; i < 11; i++) {
+                int start = i * threadProcessNum;
+                int end = (i + 1) * threadProcessNum;
+                if (start >= recordNum) {
                     break;
                 }
-                if(end>=recordNum){
-                    end = recordNum+1;
+                if (end >= recordNum) {
+                    end = recordNum + 1;
                 }
-                FileToDBThread fileToDBThread = new FileToDBThread("thread"+i,filePath,start, end,tableName,header,1000,",","UTF-8",con);
+                FileToDBThread fileToDBThread = new FileToDBThread("thread" + i, filePath, start, end, tableName, header, 1000, ",", "UTF-8", con);
                 Thread thread = new Thread(fileToDBThread);
                 thread.start();
                 threads[i] = thread;
@@ -444,11 +447,11 @@ public class FileToDBThread implements Runnable{
              * 开启一个线程去检验所有线程是否跑完
              */
             Thread thread = new Thread("checkThreadAlive") {
-                public void run(){
-                    for(Thread thread : threads){
-                        while(true){
-                            if(!thread.isAlive()){
-                                System.out.println("线程"+thread.getName()+"完成......");
+                public void run() {
+                    for (Thread thread : threads) {
+                        while (true) {
+                            if (!thread.isAlive()) {
+                                System.out.println("线程" + thread.getName() + "完成......");
                                 thread = null;
                                 break;
                             }
@@ -460,7 +463,7 @@ public class FileToDBThread implements Runnable{
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("文件"+filePath+"入库完成，用时"+(endTime-startTime)/1000);
+                    System.out.println("文件" + filePath + "入库完成，用时" + (endTime - startTime) / 1000);
                 }
             };
             thread.start();
@@ -471,10 +474,10 @@ public class FileToDBThread implements Runnable{
         final long startTime = System.currentTimeMillis();
         long fileLength = getFileLength(filePath);
         if (fileLength < 10 * 1024) { // 1 * 1024 = 1KB, 1024 * 1024 = 1MB
-            FileToDBThread fileToDBThread = new FileToDBThread("thread1",filePath,0, fileLength,tableName,header,1000,",","UTF-8",con);
+            FileToDBThread fileToDBThread = new FileToDBThread("thread1", filePath, 0, fileLength, tableName, header, 1000, ",", "UTF-8", con);
             Thread thread = new Thread(fileToDBThread);
             thread.start();
-        }else{
+        } else {
             // get available processor number
             int threadProcessNum = Runtime.getRuntime()
                     .availableProcessors();
@@ -483,7 +486,7 @@ public class FileToDBThread implements Runnable{
                     / threadProcessNum;
             long lastEndIndex = -1;
             final Thread[] threads = new Thread[threadProcessNum];
-            for(int i=0;i<threadProcessNum;i++){
+            for (int i = 0; i < threadProcessNum; i++) {
                 long currentStartIndex = lastEndIndex + 1;
                 long currentEndIndex = currentStartIndex + fileBlockLength;
                 if (currentEndIndex < fileLength) {
@@ -492,23 +495,23 @@ public class FileToDBThread implements Runnable{
                 } else {
                     currentEndIndex = fileLength;
                 }
-                FileToDBThread fileToDBThread = new FileToDBThread("thread"+i,filePath,currentStartIndex, currentEndIndex,tableName,header,1000,",","UTF-8",con);
+                FileToDBThread fileToDBThread = new FileToDBThread("thread" + i, filePath, currentStartIndex, currentEndIndex, tableName, header, 1000, ",", "UTF-8", con);
                 Thread thread = new Thread(fileToDBThread);
                 thread.start();
                 threads[i] = thread;
                 lastEndIndex = currentEndIndex;
-                System.out.println("参数是:"+filePath+",tableName="+tableName+","+header+",");
-                System.out.println("线程"+i+"开始,start="+currentStartIndex+",end="+currentEndIndex);
+                System.out.println("参数是:" + filePath + ",tableName=" + tableName + "," + header + ",");
+                System.out.println("线程" + i + "开始,start=" + currentStartIndex + ",end=" + currentEndIndex);
             }
             /**
              * 开启一个线程去检验所有线程是否跑完
              */
             Thread thread = new Thread("checkThreadAlive") {
-                public void run(){
-                    for(Thread thread : threads){
-                        while(true){
-                            if(!thread.isAlive()){
-                                System.out.println("线程"+thread.getName()+"完成......");
+                public void run() {
+                    for (Thread thread : threads) {
+                        while (true) {
+                            if (!thread.isAlive()) {
+                                System.out.println("线程" + thread.getName() + "完成......");
                                 thread = null;
                                 break;
                             }
@@ -520,7 +523,7 @@ public class FileToDBThread implements Runnable{
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("文件"+filePath+"入库完成，用时"+(endTime-startTime)/1000);
+                    System.out.println("文件" + filePath + "入库完成，用时" + (endTime - startTime) / 1000);
                 }
             };
             thread.start();
@@ -532,7 +535,7 @@ public class FileToDBThread implements Runnable{
         try {
             BufferedReader reader = new BufferedReader(new FileReader(new File(filePath)));
             String line = reader.readLine();
-            while(line!=null){
+            while (line != null) {
                 count++;
                 line = reader.readLine();
             }
@@ -544,7 +547,8 @@ public class FileToDBThread implements Runnable{
         }
         return count;
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         testBatch();
     }
 }

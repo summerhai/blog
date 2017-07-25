@@ -19,12 +19,12 @@ import java.io.*;
 public class BigXLSXAnalysis {
     public static final String FILE_PATH = "E:\\程序生成\\100WX10.xlsx";
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         //注意，如果文件过大，normal方法会报错，请注释掉
         long normalStart = System.currentTimeMillis();
         normalAnalysis();
         long normalEnd = System.currentTimeMillis();
-        caculateTime("normalAnalysis",normalStart,normalEnd);
+        caculateTime("normalAnalysis", normalStart, normalEnd);
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
@@ -33,20 +33,21 @@ public class BigXLSXAnalysis {
         long streamingStart = System.currentTimeMillis();
         streamingAnalysis();
         long streamingEnd = System.currentTimeMillis();
-        caculateTime("streamingAnalysis",streamingStart,streamingEnd);
+        caculateTime("streamingAnalysis", streamingStart, streamingEnd);
     }
 
     /**
      * 显示方法计算所用的时间
+     *
      * @param function
      * @param timeStart
      * @param timeEnd
      */
     private static void caculateTime(String function, long timeStart, long timeEnd) {
-        System.out.println("方法"+function+"耗时:"+(timeEnd-timeStart)/1000+"s");
+        System.out.println("方法" + function + "耗时:" + (timeEnd - timeStart) / 1000 + "s");
     }
 
-    public static void streamingAnalysis(){
+    public static void streamingAnalysis() {
         InputStream input = null;
         Workbook workbook = null;
         long start = System.currentTimeMillis();
@@ -57,13 +58,13 @@ public class BigXLSXAnalysis {
                     .bufferSize(4096)     // buffer size to use when reading InputStream to file (defaults to 1024)
                     .open(input);
             long end = System.currentTimeMillis();
-            caculateTime("将input封装为workbook对象",start,end);
+            caculateTime("将input封装为workbook对象", start, end);
             int sheetNum = workbook.getNumberOfSheets();
-            for(int i=0;i<sheetNum;i++){
+            for (int i = 0; i < sheetNum; i++) {
                 Sheet sheet = workbook.getSheetAt(i);
-                System.out.println("sheetName:"+sheet.getSheetName());
+                System.out.println("sheetName:" + sheet.getSheetName());
                 int rowIndex = 0;
-                for(Row row : sheet){
+                for (Row row : sheet) {
 //                    System.out.println("第"+rowIndex+"行，cellNum:"+(row.getLastCellNum()-1));
                     for (Cell cell : row) {
 //                        System.out.println(cell.getStringCellValue());
@@ -75,7 +76,7 @@ public class BigXLSXAnalysis {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 input.close();
                 workbook.close();
@@ -85,7 +86,7 @@ public class BigXLSXAnalysis {
         }
     }
 
-    public static void normalAnalysis(){
+    public static void normalAnalysis() {
         InputStream input = null;
         XSSFWorkbook xssfWorkbook = null;
         long start = System.currentTimeMillis();
@@ -93,7 +94,7 @@ public class BigXLSXAnalysis {
             input = new FileInputStream(FILE_PATH);
             xssfWorkbook = new XSSFWorkbook(input);
             long end = System.currentTimeMillis();
-            caculateTime("将input封装为XSSFWorkbook对象",start,end);
+            caculateTime("将input封装为XSSFWorkbook对象", start, end);
             int sheetNum = xssfWorkbook.getNumberOfSheets();
             for (int numSheet = 0; numSheet < sheetNum; numSheet++) {
                 //获取当前sheet
@@ -108,7 +109,7 @@ public class BigXLSXAnalysis {
                     int cellNum = xssfRow.getLastCellNum();
 //                    System.out.println("第"+rowNum+"行，cellNum:"+cellNum);
                     if (xssfRow != null) {
-                        for(int i=0;i<cellNum;i++){
+                        for (int i = 0; i < cellNum; i++) {
                             //一行的每个列的值
                             XSSFCell cell = xssfRow.getCell(i);
 //                            System.out.println(getValue(cell));
@@ -120,7 +121,7 @@ public class BigXLSXAnalysis {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 input.close();
                 xssfWorkbook.close();
@@ -130,6 +131,7 @@ public class BigXLSXAnalysis {
 
         }
     }
+
     private static String getValue(XSSFCell xssfRow) {
 
         if (xssfRow.getCellType() == xssfRow.CELL_TYPE_BOOLEAN) {

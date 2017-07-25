@@ -23,7 +23,7 @@ public class ListFunction {
         List<Integer> linkList = generateJosephusList(N);
         int winNumber1 = runJosephusProblem1(linkList, M);
         int winNumber2 = runJosephusProblem2(N, M);
-        System.out.println(winNumber1+","+winNumber2);
+        System.out.println(winNumber1 + "," + winNumber2);
     }
 
     //抽象为数学问题：f(n)=(f(n-1)+M)%N,f(1)=0
