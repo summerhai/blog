@@ -1,5 +1,6 @@
 package canghailongyin.blog.exercise;
 
+import canghailongyin.blog.utils.ExcelUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -69,7 +70,7 @@ public class ExcelToJSON {
                         if (value == null) {
                             jsonObject.put(key.toString(),"无");
                         } else {
-                            jsonObject.put(key.toString(),value);
+                            jsonObject.put(key.toString(),value.toString());
                         }
 
                     }

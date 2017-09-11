@@ -1,13 +1,11 @@
 package canghailongyin.blog.exercise;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import java.io.IOException;
 
 /**
  * Created by mingl on 2017-8-22.
@@ -16,28 +14,40 @@ public class ExcelToJSONTest {
 
     @Test
     public void testXlsToJson() throws Exception{
-        String correctPath = "C:\\Users\\mingl\\Desktop\\laugh_data.xlsx";
+        String correctPath = "C:\\Users\\mingl\\Desktop\\laugh_data.xls";
         String errorPath = "abc";
         String nullPtah = null;
         String emptyPath = "";
-//        Assert.assertSame(null,ExcelToJSON.excelToJSON(nullPtah));
-//        Assert.assertSame(null,ExcelToJSON.excelToJSON(errorPath));
-//        Assert.assertSame(null,ExcelToJSON.excelToJSON(emptyPath));
-//        JSONArray result = ExcelToJSON.excelToJSON(correctPath);
-//        System.out.println(result.toJSONString());
-//        List<String> result = new ArrayList<>();
-//        result.add("111");
-//        result.add("333");
-//        System.out.println(result.toString().replace("[","").replace("]","").replace(", ",","));
+//        Assert.assertEquals(null,ExcelToJSON.excelToJSON(nullPtah));//未通过
+//        Assert.assertEquals(null,ExcelToJSON.excelToJSON(errorPath));//未通过
+//        Assert.assertEquals(null,ExcelToJSON.excelToJSON(emptyPath));//未通过
+        String correctResult = "[{\"Content\":\"非法字符@！￥###~~！！！@#@￥#@\",\"ID\":\"1.0\",\"Source\":\"某弹幕\",\"Url\":\"无\",\"score\":\"6.0\"},{\"Content\":\"一个人在家看书，突然有人敲门，他一开门，看到一只特别小个的蜗牛，蜗牛说：请问我可以进去休息一下吗？\\u00A0\\n那个人说：不行，然后一脚把蜗牛踹飞了。\\n过了五十年，这个人在家看书的时候门又响了，他一开门，是一只人脑袋那么大的蜗牛，\\n蜗牛说：你他妈踹我干嘛\",\"ID\":\"2.0\",\"Source\":\"知乎\",\"Url\":\"http://zhihu.com/question/19594092/answer/25988747\",\"score\":\"5.5\"},{\"Content\":\"二胎政策之一\\n       妈妈对刚当幼师的女儿说：有空多到小班看看你弟弟，别光顾着和男朋友聊天…… \\n\\n二胎政策之二\\n      担任公职的A同学对中学辍学的B同学说：咱们同学一场，你好好说说你孙子，让他别老欺负我儿子…… \\n\\n二胎政策之三\\n     中学门口，校长和刚退休的女老师打招呼：咋啦，退休了还舍不得学校，来转转？退休女老师：别提了，丢人啊，儿子不听话，班主任让我来一趟……... \\n\\n二胎政策之四\\n       一老头和一中年男子送一大学生入学，同学问，你爷爷和你爸都送你来上学，好幸福啊！答：幸福个蛋，那个路都快走不动的是我爸，那个像我爸的是我哥 .... \\n\\n二胎政策之五\\n      四年后的幼儿园门口，很多人在接孩子，一男人接了3个男孩，长的特像，大家为这三胞胎称奇，问：你这3个孙子是三胞胎吧？ 男人摇了摇头说：坑爹的二胎政策，一个是我孙子，一个是我儿子。 大家追问：剩下的那个呢？ 男人哭了说：是我弟弟！！！......\\n\\n 二胎政策之六：\\n        儿媳妇拉长脸对婆婆说:我这马上就生了，你看你挺着个大肚子等人伺侯!谁照顾我坐月子?!婆婆说:回娘家叫你妈来吧!儿媳妇说:你得了吧，我妈预产期比你还早半个月呢!\",\"ID\":\"3.0\",\"Source\":\"unknown\",\"Url\":\"无\",\"score\":\"5.0\"},{\"Content\":\"小时候五六岁的时候看西游记，迷恋上孙悟空的棒子，拽着我妈非要买一个，结果~~我妈用这棒子打我五六年~~~\",\"ID\":\"4.0\",\"Source\":\"微博评论\",\"Url\":\"无\",\"score\":\"5.0\"},{\"Content\":\"一对情侣在吵架  我在旁边看着  那女的忽然指着我说：你要是有他一半帅  我们就不会吵架！男的看了看我大声吼出：我要是有他一半帅，我还能看上你？\\n我害羞的低下头心想：尼玛，关我叼事！\",\"ID\":\"5.0\",\"Source\":\"unknown\",\"Url\":\"无\",\"score\":\"无\"},{\"Content\":\"和一个女同事认识快一年了，发现她的手机壁纸一直是关羽，一直没换过，就问她:“你手机壁纸怎么一直是关羽啊？”她说:“关羽在此，尔等瘦死！”\",\"ID\":\"6.0\",\"Source\":\"小娜\",\"Url\":\"无\",\"score\":\"7.0\"},{\"Content\":\"六年前出去吃饭，基本都是付现金。三年前出去吃饭，基本都是刷卡。而现在出去吃饭付款都是扫一扫，这说明什么？ 这说明以后出门捡到钱的概率几乎为0，以前不离不弃的叫夫妻，现在不离不弃的是手机，一机在手，天长地久！机不在手，魂都没有。其实古人早已了然，并专门出了一个成语：机不可失 话虽如此！ 但是手机坚决不能再玩了，视力下降的厉害，早上远远看见大横幅“李宇春装B拉”！ 走近一看，原来是“李宁春装8折”！ 去饭馆吃饭，夹起一块红烧肉发现好多毛，很认真的一根一根地拔，等拔干净放进嘴里，奶奶的！是块姜！...... 最丢人的是昨天，老远看见邻居牵了条藏獒在门口，客气打招呼“哥，买的藏獒啊？” 哥们脸都绿了没答应，走近一看，是嫂子穿着貂皮大衣蹲地下系鞋带呢。 保护视力，关爱颈椎，远离手机！放到圈里，大家笑一笑。\",\"ID\":\"7.0\",\"Source\":\"unknown\",\"Url\":\"无\",\"score\":\"5.0\"},{\"Content\":\"正在码代码ing，医院回来的同事一脸的苦逼样子，问他怎么了？他回答：得了类风湿性关节炎了，我怕会遗传给下一代啊。我一脸的问号：谁说类风湿性关节炎能遗传的？丫一脸诧异：类不是继承的吗？\",\"ID\":\"8.0\",\"Source\":\"微信\",\"Url\":\"http://mp.weixin.qq.com/s/JTD0y7p3kjZvpd2xWzIP6g\",\"score\":\"6.0\"},{\"Content\":\"A和B的车相撞。A下来看了看，觉得车没多大问题，说算了吧。　　\\nB也笑着说没什么问题，顺手从车上取出一瓶二锅头。\\nB：大哥，车没什么大问题，喝点酒压压惊吧！\\n　　A接过酒喝了一大口，递给B。\\n　　A：大哥，你也来点吧。\\n　　B：我不急，等警察来了看过以后我再喝。\",\"ID\":\"9.0\",\"Source\":\"知乎\",\"Url\":\"无\",\"score\":\"2.0\"},{\"Content\":\"有个卖盾和矛的楚国人，夸他的盾说：“我的盾坚固无比，任何锋利的东西都穿不透它。”又夸耀自己的矛说：“我的矛锋利极了，什么坚固的东西都能刺穿。”路人问他：“用您的矛来刺您的盾，结果会怎么样呢？”那人不知道怎么回答，就走到路人跟前一矛将其扎死，说道：就TM你话多。\",\"ID\":\"10.0\",\"Source\":\"知乎\",\"Url\":\"无\",\"score\":\"3.0\"}]";
+        JSONArray correctArray = JSON.parseArray(correctResult);
+        Assert.assertEquals(correctArray,ExcelToJSON.excelToJSON(correctPath));//通过
+
     }
 
     @Test
-    public void testXlsxToJson(){
+    public void testXlsxToJson() throws IOException {
         String correctPath = "C:\\Users\\mingl\\Desktop\\laugh_data.xlsx";
         String errorPath = "abc";
         String nullPtah = null;
         String emptyPath = "";
+//        Assert.assertSame(null,ExcelToJSON.excelToJSON(nullPtah));//未通过
+//        Assert.assertSame(null,ExcelToJSON.excelToJSON(errorPath));//未通过
+//        Assert.assertSame(null,ExcelToJSON.excelToJSON(emptyPath));//未通过
+        String correctResult = "[{\"Content\":\"11.0\",\"ID\":\"1.0\",\"Source\":\"某弹幕\",\"Url\":\"无\",\"score\":\"6.0\"},{\"Content\":\"一个人在家看书，突然有人敲门，他一开门，看到一只特别小个的蜗牛，蜗牛说：请问我可以进去休息一下吗？\\u00A0\\n那个人说：不行，然后一脚把蜗牛踹飞了。\\n过了五十年，这个人在家看书的时候门又响了，他一开门，是一只人脑袋那么大的蜗牛，\\n蜗牛说：你他妈踹我干嘛\",\"ID\":\"2.0\",\"Source\":\"知乎\",\"Url\":\"http://zhihu.com/question/19594092/answer/25988747\",\"score\":\"5.5\"},{\"Content\":\"二胎政策之一\\n       妈妈对刚当幼师的女儿说：有空多到小班看看你弟弟，别光顾着和男朋友聊天…… \\n\\n二胎政策之二\\n      担任公职的A同学对中学辍学的B同学说：咱们同学一场，你好好说说你孙子，让他别老欺负我儿子…… \\n\\n二胎政策之三\\n     中学门口，校长和刚退休的女老师打招呼：咋啦，退休了还舍不得学校，来转转？退休女老师：别提了，丢人啊，儿子不听话，班主任让我来一趟……... \\n\\n二胎政策之四\\n       一老头和一中年男子送一大学生入学，同学问，你爷爷和你爸都送你来上学，好幸福啊！答：幸福个蛋，那个路都快走不动的是我爸，那个像我爸的是我哥 .... \\n\\n二胎政策之五\\n      四年后的幼儿园门口，很多人在接孩子，一男人接了3个男孩，长的特像，大家为这三胞胎称奇，问：你这3个孙子是三胞胎吧？ 男人摇了摇头说：坑爹的二胎政策，一个是我孙子，一个是我儿子。 大家追问：剩下的那个呢？ 男人哭了说：是我弟弟！！！......\\n\\n 二胎政策之六：\\n        儿媳妇拉长脸对婆婆说:我这马上就生了，你看你挺着个大肚子等人伺侯!谁照顾我坐月子?!婆婆说:回娘家叫你妈来吧!儿媳妇说:你得了吧，我妈预产期比你还早半个月呢!\",\"ID\":\"3.0\",\"Source\":\"unknown\",\"Url\":\"无\",\"score\":\"5.0\"},{\"Content\":\"小时候五六岁的时候看西游记，迷恋上孙悟空的棒子，拽着我妈非要买一个，结果~~我妈用这棒子打我五六年~~~\",\"ID\":\"4.0\",\"Source\":\"微博评论\",\"Url\":\"无\",\"score\":\"5.0\"},{\"Content\":\"一对情侣在吵架  我在旁边看着  那女的忽然指着我说：你要是有他一半帅  我们就不会吵架！男的看了看我大声吼出：我要是有他一半帅，我还能看上你？\\n我害羞的低下头心想：尼玛，关我叼事！\",\"ID\":\"5.0\",\"Source\":\"unknown\",\"Url\":\"无\",\"score\":\"无\"},{\"Content\":\"和一个女同事认识快一年了，发现她的手机壁纸一直是关羽，一直没换过，就问她:“你手机壁纸怎么一直是关羽啊？”她说:“关羽在此，尔等瘦死！”\",\"ID\":\"6.0\",\"Source\":\"小娜\",\"Url\":\"无\",\"score\":\"7.0\"},{\"Content\":\"六年前出去吃饭，基本都是付现金。三年前出去吃饭，基本都是刷卡。而现在出去吃饭付款都是扫一扫，这说明什么？ 这说明以后出门捡到钱的概率几乎为0，以前不离不弃的叫夫妻，现在不离不弃的是手机，一机在手，天长地久！机不在手，魂都没有。其实古人早已了然，并专门出了一个成语：机不可失 话虽如此！ 但是手机坚决不能再玩了，视力下降的厉害，早上远远看见大横幅“李宇春装B拉”！ 走近一看，原来是“李宁春装8折”！ 去饭馆吃饭，夹起一块红烧肉发现好多毛，很认真的一根一根地拔，等拔干净放进嘴里，奶奶的！是块姜！...... 最丢人的是昨天，老远看见邻居牵了条藏獒在门口，客气打招呼“哥，买的藏獒啊？” 哥们脸都绿了没答应，走近一看，是嫂子穿着貂皮大衣蹲地下系鞋带呢。 保护视力，关爱颈椎，远离手机！放到圈里，大家笑一笑。\",\"ID\":\"7.0\",\"Source\":\"unknown\",\"Url\":\"无\",\"score\":\"5.0\"},{\"Content\":\"正在码代码ing，医院回来的同事一脸的苦逼样子，问他怎么了？他回答：得了类风湿性关节炎了，我怕会遗传给下一代啊。我一脸的问号：谁说类风湿性关节炎能遗传的？丫一脸诧异：类不是继承的吗？\",\"ID\":\"8.0\",\"Source\":\"微信\",\"Url\":\"http://mp.weixin.qq.com/s/JTD0y7p3kjZvpd2xWzIP6g\",\"score\":\"6.0\"},{\"Content\":\"A和B的车相撞。A下来看了看，觉得车没多大问题，说算了吧。　　\\nB也笑着说没什么问题，顺手从车上取出一瓶二锅头。\\nB：大哥，车没什么大问题，喝点酒压压惊吧！\\n　　A接过酒喝了一大口，递给B。\\n　　A：大哥，你也来点吧。\\n　　B：我不急，等警察来了看过以后我再喝。\",\"ID\":\"9.0\",\"Source\":\"知乎\",\"Url\":\"无\",\"score\":\"2.0\"},{\"Content\":\"有个卖盾和矛的楚国人，夸他的盾说：“我的盾坚固无比，任何锋利的东西都穿不透它。”又夸耀自己的矛说：“我的矛锋利极了，什么坚固的东西都能刺穿。”路人问他：“用您的矛来刺您的盾，结果会怎么样呢？”那人不知道怎么回答，就走到路人跟前一矛将其扎死，说道：就TM你话多。\",\"ID\":\"10.0\",\"Source\":\"知乎\",\"Url\":\"无\",\"score\":\"3.0\"}]";
+        JSONArray correctArray = JSON.parseArray(correctResult);
+        Assert.assertEquals(correctArray,ExcelToJSON.excelToJSON(correctPath));
 
+    }
+
+    @Test
+    public void testCreateTable() throws Exception {
+        String correctPath = "C:\\Users\\mingl\\Desktop\\laugh_data.xlsx";
+        JSONArray array = ExcelToJSON.excelToJSON(correctPath);
+        JSONtoDatabase.createTable();
+        JSONtoDatabase.insertLaugh(array);
     }
 
 
