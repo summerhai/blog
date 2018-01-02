@@ -20,7 +20,7 @@ import java.io.InputStream;
  */
 public class ExcelToJSON {
     public static void main(String[] args) throws IOException {
-        String correctPath = "C:\\Users\\mingl\\Desktop\\laugh_data.xlsx";
+        String correctPath = "C:\\Users\\mingl\\Desktop\\学习书籍\\dz.xlsx";
         String errorPath = "abc";
         String nullPtah = null;
         String emptyPath = "";
