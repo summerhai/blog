@@ -1,9 +1,6 @@
 package canghailongyin.blog.exercise;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Created by mingl on 2018-1-3.
@@ -12,12 +9,15 @@ public class ThreadTest {
 
     public static void main(String[] args) throws InterruptedException {
 //        normalThread();
-//        useThreadPool();
+        useThreadPool();
     }
 
     private static void useThreadPool() {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<Runnable>(5));
+        //自动配置
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
+        //手动配置
+//        ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
+//                new ArrayBlockingQueue<Runnable>(5));
 
         for(int i=0;i<3;i++){
             MyThread myThread = new MyThread("thread"+i);

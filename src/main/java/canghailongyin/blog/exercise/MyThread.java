@@ -13,7 +13,7 @@ public class MyThread implements Runnable {
 
     @Override
     public void run() {
-        for(int i=0;i<30;i++){
+        for(int i=0;i<60;i++){
             System.out.println("i am " + threadName + ",i'm printing " + (i+1));
         }
     }
