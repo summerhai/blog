@@ -2,15 +2,43 @@ package canghailongyin.blog.leetcode.linkedlist;
 
 import canghailongyin.blog.basic_structure.ListNode;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 /**
  * Created by mingl on 2017-9-9.
  * 终于不怕单链表翻转了！！
  */
 public class ResverseLinkList {
 
+
+    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        Stack<Integer> stack = new Stack<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
+        while (listNode != null){
+            stack.push(listNode.val);
+            listNode = listNode.next;
+        }
+        while (!stack.empty()){
+            result.add(stack.pop());
+        }
+        return result;
+    }
+
+/*    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        listNode = resverseLinkList(listNode);
+        ArrayList<Integer> result = new ArrayList<>();
+        while (listNode != null){
+            result.add(listNode.val);
+            listNode = listNode.next;
+        }
+        return result;
+    }*/
+
     public ListNode resverseLinkList(ListNode head) {
-        if (head == null)
+        if (head == null){
             return null;
+        }
         ListNode newHead = null;
         ListNode curNode = head;
         ListNode preNode = null;

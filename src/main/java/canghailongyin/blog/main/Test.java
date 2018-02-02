@@ -8,15 +8,9 @@ import java.util.Random;
  */
 public class Test {
     public static void main(String[] args) {
-        int[] a = new int[10];
-        Random random = new Random();
-        for(int i=0;i<10;i++){
-            a[i] = random.nextInt();
-            System.out.println(a[i]);
-        }
-        long start = System.currentTimeMillis();
-//        Arrays.sort();
-        long end = System.currentTimeMillis();
-        System.out.println("1:"+(end-start));
+        int[] num1 = {1,2,3,4,5};
+        int[] num2 = num1.clone();
+        num1[0] = 3;
+        System.out.println(Arrays.toString(num2));
     }
 }
